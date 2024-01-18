@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to StudentController.create or StudentController.update,
+     depending on whether we are creating or editing an entity -->
+<form method="POST" th:action="@{'/students/{id}' (id=${student?.getId()})}">
+    <div>
+        <label for="f1">Name</label>
+        <input type="text"
+               id="f1"
+               name="name"
+               th:value="${student?.name}"
+               required>
+    </div>
+    <div>
+        <label for="f2">Email</label>
+        <input type="email"
+               id="f2"
+               name="email"
+               th:value="${student?.email}"
+               required>
+    </div>
+    <div>
+        <label for="f3">Password</label>
+        <!-- Do not set the value here -->
+        <input type="password"
+               id="f3"
+               name="password"
+               required>
+    </div>
+    <div>
+        <label for="f6">Enrollment Date</label>
+        <input type="date"
+               id="f6"
+               name="enrollmentDate"
+               th:value="${student?.enrollmentDate}"
+               required>
+    </div>
+    <div>
+        <label>Type</label><br/>
+        <label for="f4"></label><select id="f4" name="type">
+            <!-- For each type you should have one <option> like below  -->
+            <option th:each="type:${Types}" th:value="${type}" th:text="${type.toString()}"
+                    th:selected="${student!=null ? student.getType().equals(type):false}"> [type_name]</option>
+        </select>
+    </div>
+    <div>
+        <label>Courses</label><br/>
+        <label for="f5"></label><select id="f5" name="coursesId" multiple >
+            <!-- For each course you should have one <option> like below  -->
+            <option th:each="course:${courses}" th:value="${course.id}" th:text="${course.name}"> [course.name]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit" >Submit</button>
+    <a id="back" href="/students" type="button" class="btn btn-primary">Back to students</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

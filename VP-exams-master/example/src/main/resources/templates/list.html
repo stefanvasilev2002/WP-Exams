@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method ProductsController.showProducts -->
+    <form id="filter-form" method="get" action="/">
+        <label for="nameSearch">Name</label>
+        <input id="nameSearch" type="text" name="nameSearch"/>
+        <label for="categoryId">Category</label>
+        <select id="categoryId" name="categoryId">
+            <option value="">All</option>
+            <!-- For each category you should have one <option> like below  -->
+            <option th:each="category : ${categories}" th:value="${category.getId()}" th:text="${category.getName()}">
+                [cat.name]
+            </option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- ProductsController.showAdd -->
+        <a href="/products/add" class="add-item" sec:authorize="hasRole('ADMIN')">
+            Add new product
+        </a>
+    </div>
+    <table>
+        <tr>
+            <th>Product name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Categories</th>
+            <th>Creator</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each product you should have one <tr> like below -->
+        <tr class="item" th:each="product : ${products}">
+            <td th:text="${product.getName()}">[prod.name]</td>
+            <td th:text="${product.getPrice()}">[prod.price]</td>
+            <td th:text="${product.getQuantity().toString()}">[prod.quantity]</td>
+            <td>
+                <ul>
+                    <!-- For each product's category you should display one <li> element like the one below -->
+                    <li th:each="category : ${product.getCategories()}" th:text="${category.getName()}">[cat.name]</li>
+                </ul>
+            </td>
+            <td th:text="${product?.getCreator()?.getUsername()}">[prod.creator]</td>
+            <td sec:authorize="hasRole('ADMIN')">
+                <!-- ProductsController.delete -->
+                <form method="post" th:action="@{'/products/{id}/delete' (id=${product.getId()})}">
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+                <!-- ProductsController.showEdit -->
+                <a th:href="@{'/products/{id}/edit' (id=${product.getId()})}" class="edit-item">Edit</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>

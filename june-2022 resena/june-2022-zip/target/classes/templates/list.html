@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method VirtualServerController.showNews -->
+    <form id="filter-form">
+        <label for="f1">Launched in days: </label>
+        <input id="f1" type="number" name="activeMoreThanDays"/>
+        <label for="f2">Owner</label>
+        <select id="f2" name="ownerId">
+            <option value="">All</option>
+            <!-- For each user you should have one <option> like below  -->
+            <option th:each="user:${users}" th:value="${user?.id}" th:text="${user.username}"> [user.username]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- VirtualServerController.showAdd (Only SYSADMIN can see this element)-->
+        <a th:href="@{'/VirtualServers/add'}" class="add-item" sec:authorize="hasRole('ROLE_SYSADMIN')">
+            Add
+        </a>
+    </div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>IPAddress</th>
+            <th>OSType</th>
+            <th>Owners</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each VirtualServers you should have one <tr> like below -->
+        <tr th:each="VirtualServer:${servers}" class="item">
+            <td th:value="${VirtualServer.instanceName}" th:text="${VirtualServer.instanceName}">[VirtualServer.name]</td>
+            <td th:value="${VirtualServer.ipAddress}" th:text="${VirtualServer.ipAddress}">[VirtualServer.ipaddress]</td>
+            <td th:value="${VirtualServer.OSType}" th:text="${VirtualServer.OSType}">[VirtualServer.ostype]</td>
+            <td>
+                <!-- For each of the virtualserver.owners show the following element-->
+                <span th:each="owner:${VirtualServer?.owners}" th:value="${owner.username}" th:text="${owner.username}" class="item-rel"> [owner.username]</span>
+            </td>
+            <td>
+                <!-- VirtualServerController.delete (Only SYSADMIN can see this element)-->
+                <form METHOD="POST" th:action="@{'/VirtualServers/{id}/delete' (id=${VirtualServer.getId()})}" sec:authorize="hasRole('ROLE_SYSADMIN')" >
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+                <!-- VirtualServerController.showEdit (Only SYSADMIN can see this element)-->
+                <a  th:href="@{'/VirtualServers/{id}/edit' (id=${VirtualServer.getId()})}" class="edit-item" sec:authorize="hasRole('ROLE_SYSADMIN')" >Edit</a>
+
+                <!-- VirtualServerController.markTerminated (Visible only when the virtual server is not terminated)-->
+                <div th:if="${!VirtualServer.terminated}">
+                <form METHOD="POST"  th:action="@{'/VirtualServers/{id}/terminate' (id=${VirtualServer.getId()})}">
+                    <button class="change-item">Terminate</button>
+                </form>
+                </div>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to EmployeeController.create or EmployeeController.update,
+     depending on whether we are creating or editing an entity -->
+<form method="post" th:action="@{'/employees/{id}' (id = ${employee?.getId()})}">
+    <div>
+        <label for="f1">Name</label>
+        <input type="text"
+               id="f1"
+               name="name"
+               th:value="${employee?.getName()}"
+               required>
+    </div>
+    <div>
+        <label for="f2">Email</label>
+        <input type="email"
+               id="f2"
+               name="email"
+               th:value="${employee?.getEmail()}"
+               required>
+    </div>
+    <div>
+        <label for="f3">Password</label>
+        <!-- Do not set the value here -->
+        <input type="password"
+               id="f3"
+               name="password"
+               required>
+    </div>
+    <div>
+        <label for="f6">Employment Date</label>
+        <input type="date"
+               id="f6"
+               name="employmentDate"
+               th:value="${employee?.getEmploymentDate()}"
+               required>
+    </div>
+    <div>
+        <label for="f4">Type</label><br/>
+        <select name="type" id="f4">
+            <!-- For each type you should have one <option> like below  -->
+            <option th:each="t : ${types}" th:value="${t}"  th:text="${t}"> [type_name]</option>
+        </select>
+    </div>
+    <div>
+        <label for="f5">Skills</label><br/>
+        <select name="skillId" id="f5"  multiple>
+            <!-- For each skill you should have one <option> like below  -->
+            <option th:each="s : ${skills}" th:value="${s.getId()}" th:text="${s.getName()}" > [skill.name]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/employees" type="button" class="btn btn-primary">Back to employees</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

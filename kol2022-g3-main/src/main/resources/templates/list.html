@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method ForumUsersController.showList -->
+    <form id="filter-form">
+        <label for="f1">Age</label>
+        <input id="f1" type="number" name="age"/>
+        <label for="f2">Interest</label>
+        <select id="f2" name="interestId">
+            <option value="">All</option>
+            <!-- For each interest you should have one <option> like below  -->
+            <option th:each="interest:${interests}" th:value="${interest.getId()}" th:text="${interest.getName()}"> [interest]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- ForumUsersController.showAdd (Only ADMIN can see this element)-->
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/users/add" class="add-item">
+                Add
+            </a>
+        </th:block>
+    </div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Interests</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each user you should have one <tr> like below -->
+        <tr class="item" th:each="user:${users}">
+            <td th:text="${user.getName()}">[user.name]</td>
+            <td th:text="${user.getEmail()}">[user.email]</td>
+            <td th:text="${user.getType()}">[user.type]</td>
+            <td>
+                <!-- For each of the user.interests show the following element-->
+                <span class="item-rel" th:each="interest:${user.getInterests()}" th:text="${interest.getName()}"> [interest.name]</span>
+            </td>
+            <td>
+                <!-- ForumUsersController.delete (Only ADMIN can see this element)-->
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                <form method="post" th:action="@{'/users/{id}/delete' (id=${user.getId()})}">
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+                <!-- ForumUsersController.showEdit (Only ADMIN can see this element)-->
+                <a class="edit-item" th:href="@{'/users/{id}/edit' (id=${user.getId()})}">Edit</a>
+                </th:block>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to VirtualServerController.create or VirtualServerController.update,
+     depending on whether we are creating or editing an entity -->
+<form method="POST" th:action="@{'/VirtualServers/{id}' (id=${server?.getId()})}" >
+    <div>
+        <label for="f1">Instance Name</label>
+        <input type="text"
+               id="f1"
+               name="instanceName"
+               th:value="${server?.instanceName}"
+               required>
+    </div>
+    <div>
+        <label for="f2">IPAddress</label>
+        <input type="text"
+               id="f2"
+               name="ipAddress"
+               th:value="${server?.ipAddress}"
+               required>
+    </div>
+    <div>
+        <label for="f6">Launch Date</label>
+        <input type="date"
+               id="f6"
+               name="launchDate"
+               th:value="${server?.launchDate}"
+               required>
+    </div>
+    <div>
+        <label>OSType</label><br/>
+        <select id="f4" name="osType">
+            <!-- For each OS Type you should have one <option> like below  -->
+            <option th:each="planet : ${T(mk.ukim.finki.wp.june2022.g1.model.OSType).values()}"
+              th:text="${planet.toString()}" th:value="${planet}"
+                    th:selected="${server!=null ? server.getOSType().equals(planet):false}"> [OSType_name]</option>
+        </select>
+    </div>
+    <div>
+        <label>Owners</label><br/>
+        <select id="f5" name="owners" multiple="multiple">
+            <!-- For each owner you should have one <option> like below  -->
+            <option th:each="owner:${users}" th:value="${owner.id}" th:text="${owner.username}"
+                    th:selected="${server!=null ? server.getOwners().contains(owner):false}"> [owner.username]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/VirtualServers" type="button" class="btn btn-primary">Back to VirtualServers</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <input type="hidden" id="f3" value="f3" required>
+    </ul>
+</div>
+
+</body>
+</html>

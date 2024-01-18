@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to ProductsController.create or  ProductsController.update, depending on whether we are
+creating or editing a product -->
+<form th:method="POST" th:action="@{ ${product != null} ? '/products/' + ${product.id} : '/products' }">
+    <div>
+        <label for="name">Name</label>
+        <input type="text"
+               id="name"
+               name="name"
+               th:value="${product?.name}"
+               required>
+    </div>
+    <div>
+        <label for="price">Price</label>
+        <input type="number"
+               id="price"
+               th:value="${product?.price}"
+               name="price" required>
+    </div>
+    <div>
+        <label for="quantity">Quantity</label>
+        <input type="number"
+               id="quantity"
+               th:value="${product?.quantity}"
+               name="quantity" required>
+    </div>
+    <div>
+        <label>Category</label><br/>
+        <select id="categories" name="categories" multiple="multiple" size="5">
+            <!-- For each category you should have one <option> like below  -->
+            <option
+                    th:each="cat: ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}"
+                    th:selected="${product?.categories?.contains(cat)}"
+            > [cat.name]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/products" type="button" class="btn btn-primary">Back to products</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

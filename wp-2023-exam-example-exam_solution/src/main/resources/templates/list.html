@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method ProductsController.showProducts -->
+    <form id="filter-form">
+
+        <label for="nameSearch">Name</label>
+        <input id="nameSearch" type="text" name="nameSearch"/>
+        <label for="categoryId">Category</label>
+        <select id="categoryId" name="categoryId">
+            <option value="">All</option>
+            <!-- For each category you should have one <option> like below  -->
+            <option th:each="cat: ${categories}" th:value="${cat.id}" th:text="${cat.name}"> [cat.name]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- ProductsController.showAdd -->
+        <a href="/products/add" class="add-item" sec:authorize="hasRole('ROLE_ADMIN')">
+            Add new product
+        </a>
+    </div>
+    <table>
+        <tr>
+            <th>Product name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Categories</th>
+            <th>Creator</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each product you should have one <tr> like below -->
+        <tr class="item" th:each="prod: ${products}">
+            <td th:text="${prod.name}">[prod.name]</td>
+            <td th:text="${prod.price}">[prod.price]</td>
+            <td th:text="${prod.quantity}">[prod.quantity]</td>
+            <td>
+                <ul>
+                    <!-- For each product's category you should display one <li> element like the one below -->
+                    <li th:each="cat: ${prod.categories}" th:text="${cat.name}">[cat.name]</li>
+                </ul>
+            </td>
+            <td th:text="${prod.creator}">[prod.creator]</td>
+            <td>
+                <!-- ProductsController.delete -->
+                <form th:method="POST" th:action="@{'/products/{id}/delete' (id=${prod.id})}"
+                      sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+                <!-- ProductsController.showEdit -->
+                <a th:href="@{'/products/{id}/edit' (id=${prod.id})}" class="edit-item" sec:authorize="hasRole('ROLE_ADMIN')">Edit</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>

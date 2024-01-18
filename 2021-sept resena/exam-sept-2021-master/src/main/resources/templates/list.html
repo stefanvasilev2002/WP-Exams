@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method NewsController.showNews -->
+    <form id="filter-form">
+        <label for="price">Price</label>
+        <input id="price" type="number" name="price"/>
+        <label for="type">Type</label>
+        <select id="type" name="type">
+            <option value="">All</option>
+            <!-- For each type you should have one <option> like below  -->
+            <option th:each="type:${Types}" th:value="${type}" th:text="${type.toString()}"> [type]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- NewsController.showAdd -->
+            <a th:href="@{'/news/add'}"  class="add-item">
+                Add news
+            </a>
+    </div>
+    <table>
+        <tr>
+            <th>Match name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Likes</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each news you should have one <tr> like below -->
+        <tr th:each="none:${news}" class="item">
+            <td th:text="${none.name}">[news.name]</td>
+            <td th:text="${none.description}">[news.description]</td>
+            <td th:text="${none.price}">[news.price]</td>
+            <td th:text="${none.type}">[news.type]</td>
+            <td th:text="${none.category.name}">[news.category]</td>
+            <td th:text="${none.likes}"> [news.likes]</td>
+            <td>
+                    <!-- NewsController.delete -->
+                    <form method="POST" th:action="@{'/news/{id}/delete' (id=${none.getId()})}">
+                        <button type="submit" class="delete-item">Delete</button>
+                    </form>
+                    <!-- NewsController.showEdit -->
+                    <a th:href="@{'/news/{id}/edit' (id=${none.getId()})}"  class="edit-item">Edit</a>
+                    <!-- NewsController.follow -->
+                    <form method="POST" th:action="@{'/news/{id}/like' (id=${none.getId()})}">
+                        <button type="submit" class="like-item">Like</button>
+                    </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>
