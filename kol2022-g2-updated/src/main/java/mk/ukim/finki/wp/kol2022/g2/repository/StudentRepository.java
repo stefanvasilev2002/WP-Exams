@@ -10,9 +10,11 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    List<Student> findByCoursesContaining(Course course);
-    List<Student> findByCoursesContainingAndEnrollmentDateBefore(Course course, LocalDate date);
-    List<Student> findByEnrollmentDateBefore(LocalDate date);
+    List<Student> findAllByCoursesContainingAndEnrollmentDateBefore(Course byId, LocalDate localDate);
 
-    Student findByEmail(String email);
+    List<Student> findAllByCoursesContaining(Course byId);
+
+    List<Student> findAllByEnrollmentDateBefore(LocalDate localDate);
+
+    Student findByEmail(String username);
 }

@@ -33,21 +33,25 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player create(String name, String bio, Double pointsPerGame, PlayerPosition position, Long team) {
         return playerRepository.save(new Player(
-                name, bio, pointsPerGame, position, teamService.findById(team)
+                name,
+                bio,
+                pointsPerGame,
+                position,
+                teamService.findById(team)
         ));
     }
 
     @Override
     public Player update(Long id, String name, String bio, Double pointsPerGame, PlayerPosition position, Long team) {
-       Player player = findById(id);
-       player.setName(name);
-       player.setBio(bio);
-       player.setPointsPerGame(pointsPerGame);
-       player.setPosition(position);
-       player.setTeam(teamService.findById(team));
+        Player player = findById(id);
 
-       playerRepository.save(player);
-       return player;
+        player.setName(name);
+        player.setBio(bio);
+        player.setPosition(position);
+        player.setPointsPerGame(pointsPerGame);
+        player.setTeam(teamService.findById(team));
+
+        return playerRepository.save(player);
     }
 
     @Override
@@ -61,23 +65,20 @@ public class PlayerServiceImpl implements PlayerService {
     public Player vote(Long id) {
         Player player = findById(id);
         player.setVotes(player.getVotes() + 1);
-        playerRepository.save(player);
-        return player;
+        return playerRepository.save(player);
     }
 
     @Override
     public List<Player> listPlayersWithPointsLessThanAndPosition(Double pointsPerGame, PlayerPosition position) {
-        if (pointsPerGame == null && position == null){
-            return listAllPlayers();
-        }
-        else if (pointsPerGame != null && position != null){
+        if (position != null && pointsPerGame != null){
             return playerRepository.findByPointsPerGameLessThanAndPosition(pointsPerGame, position);
+        }
+        else if (position != null){
+            return playerRepository.findByPosition(position);
         }
         else if (pointsPerGame != null){
             return playerRepository.findByPointsPerGameLessThan(pointsPerGame);
         }
-        else {
-            return playerRepository.findByPosition(position);
-        }
+        return listAllPlayers();
     }
 }

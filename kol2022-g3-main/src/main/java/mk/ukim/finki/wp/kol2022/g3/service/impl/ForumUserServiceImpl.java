@@ -6,25 +6,27 @@ import mk.ukim.finki.wp.kol2022.g3.model.exceptions.InvalidForumUserIdException;
 import mk.ukim.finki.wp.kol2022.g3.repository.ForumUserRepository;
 import mk.ukim.finki.wp.kol2022.g3.service.ForumUserService;
 import mk.ukim.finki.wp.kol2022.g3.service.InterestService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
-public class ForumUserServiceImpl implements ForumUserService {
+public class ForumUserServiceImpl implements ForumUserService, UserDetailsService {
     private final ForumUserRepository forumUserRepository;
     private final InterestService interestService;
     private final PasswordEncoder passwordEncoder;
-
     public ForumUserServiceImpl(ForumUserRepository forumUserRepository, InterestService interestService, PasswordEncoder passwordEncoder) {
         this.forumUserRepository = forumUserRepository;
         this.interestService = interestService;
         this.passwordEncoder = passwordEncoder;
     }
-
     @Override
     public List<ForumUser> listAll() {
         return forumUserRepository.findAll();
@@ -40,7 +42,7 @@ public class ForumUserServiceImpl implements ForumUserService {
         return forumUserRepository.save(new ForumUser(
                 name,
                 email,
-                passwordEncoder.encode(password),
+                password,
                 type,
                 interestId.stream().map(interestService::findById).collect(Collectors.toList()),
                 birthday
@@ -50,14 +52,15 @@ public class ForumUserServiceImpl implements ForumUserService {
     @Override
     public ForumUser update(Long id, String name, String email, String password, ForumUserType type, List<Long> interestId, LocalDate birthday) {
         ForumUser user = findById(id);
+
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(password);
+        user.setBirthday(birthday);
         user.setType(type);
         user.setInterests(interestId.stream().map(interestService::findById).collect(Collectors.toList()));
-        user.setBirthday(birthday);
-        forumUserRepository.save(user);
-        return user;
+
+        return forumUserRepository.save(user);
     }
 
     @Override
@@ -69,20 +72,29 @@ public class ForumUserServiceImpl implements ForumUserService {
 
     @Override
     public List<ForumUser> filter(Long interestId, Integer age) {
-        if (interestId == null && age == null){
-            return listAll();
+        if (interestId != null && age != null) {
+            return forumUserRepository.findAllByInterestsContainingAndBirthdayBefore(interestService.findById(interestId),
+                    LocalDate.now().minusYears(age));
         }
-        else if (interestId != null && age == null){
-            return forumUserRepository.findByInterestsContaining(interestService.findById(interestId));
+
+        if (interestId != null) {
+            return forumUserRepository.findAllByInterestsContaining(interestService.findById(interestId));
         }
-        else if (age != null && interestId == null){
-            return forumUserRepository.findByBirthdayBefore(LocalDate.now().minusYears(age));
+
+        if (age != null) {
+            return forumUserRepository.findAllByBirthdayBefore(LocalDate.now().minusYears(age));
         }
-        else {
-            return forumUserRepository
-                    .findByInterestsContainingAndBirthdayBefore(
-                            interestService.findById(interestId),
-                            LocalDate.now().minusYears(age));
-        }
+
+        return listAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        ForumUser user = forumUserRepository.findByEmail(username);
+        return new User(
+                user.getEmail(),
+                passwordEncoder.encode(user.getPassword()),
+                Collections.singleton(user.getType())
+        );
     }
 }

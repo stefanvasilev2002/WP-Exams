@@ -118,7 +118,7 @@ public class SeleniumScenarioTest {
             listPage = ItemsPage.to(this.driver);
         }
         listPage = AddOrEditForm.add(this.driver, listPage.getAddButton().isEmpty() ? null : listPage.getAddButton().get(0),
-                "f1", "f2", "f3", StudentType.MASTER.name(), courses.get(0).getId().toString(), LocalDate.now().minusYears(5).toString());
+                "f1", "f2", "f3", StudentType.ROLE_MASTER.name(), courses.get(0).getId().toString(), LocalDate.now().minusYears(5).toString());
         AbstractPage.assertRelativeUrl(this.driver, LIST_URL);
         listPage.assertNoError();
         listPage.assertItems(itemNum + 1, 2 * itemNum + 1);
@@ -140,7 +140,7 @@ public class SeleniumScenarioTest {
                 .param("name", "testName")
                 .param("email", "testDescription")
                 .param("password", "test")
-                .param("type", StudentType.MASTER.name())
+                .param("type", StudentType.ROLE_MASTER.name())
                 .param("coursesId", categories.get(0).getId().toString())
                 .param("coursesId", categories.get(1).getId().toString())
                 .param("enrollmentDate", LocalDate.now().minusYears(5).toString());
@@ -239,7 +239,7 @@ public class SeleniumScenarioTest {
         }
 
         listPage = AddOrEditForm.update(this.driver, listPage.getEditButtons().get(itemNum - 1),
-                "f1u", "f2u", "f3u", StudentType.MASTER.name(), "1,2,3", LocalDate.now().minusYears(5).toString());
+                "f1u", "f2u", "f3u", StudentType.ROLE_MASTER.name(), "1,2,3", LocalDate.now().minusYears(5).toString());
         listPage.assertNoError();
 
         AbstractPage.assertRelativeUrl(this.driver, LIST_URL);
@@ -265,7 +265,7 @@ public class SeleniumScenarioTest {
                 .param("name", "testName")
                 .param("email", "testDescription")
                 .param("password", "test")
-                .param("type", StudentType.MASTER.name())
+                .param("type", StudentType.ROLE_MASTER.name())
                 .param("coursesId", categories.get(0).getId().toString())
                 .param("coursesId", categories.get(1).getId().toString())
                 .param("coursesId", categories.get(2).getId().toString())

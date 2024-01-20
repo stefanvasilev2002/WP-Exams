@@ -55,11 +55,10 @@ public class StudentController {
      *
      * @return The view "form.html".
      */
-    @GetMapping(value = "/students/add")
+    @GetMapping("/students/add")
     public String showAdd(Model model) {
-        model.addAttribute("student", new Student());
-        model.addAttribute("courses", courseService.listAll());
         model.addAttribute("types", StudentType.values());
+        model.addAttribute("courses", courseService.listAll());
         return "form";
     }
 
@@ -70,11 +69,12 @@ public class StudentController {
      *
      * @return The view "form.html".
      */
-    @GetMapping(value = "/students/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
+    @GetMapping("/students/{id}/edit")
+    public String showEdit(@PathVariable Long id,
+                           Model model) {
         model.addAttribute("student", service.findById(id));
-        model.addAttribute("courses", courseService.listAll());
         model.addAttribute("types", StudentType.values());
+        model.addAttribute("courses", courseService.listAll());
         return "form";
     }
 
@@ -85,13 +85,13 @@ public class StudentController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/students")
+    @PostMapping("/students")
     public String create(@RequestParam String name,
                          @RequestParam String email,
                          @RequestParam String password,
                          @RequestParam StudentType type,
                          @RequestParam List<Long> coursesId,
-                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate enrollmentDate) {
+                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate enrollmentDate) {
         this.service.create(name, email, password, type, coursesId, enrollmentDate);
         return "redirect:/students";
     }
@@ -103,14 +103,14 @@ public class StudentController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/students/{id}")
+    @PostMapping("/students/{id}")
     public String update(@PathVariable Long id,
                          @RequestParam String name,
                          @RequestParam String email,
                          @RequestParam String password,
                          @RequestParam StudentType type,
                          @RequestParam List<Long> coursesId,
-                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate enrollmentDate) {
+                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate enrollmentDate) {
         this.service.update(id, name, email, password, type, coursesId, enrollmentDate);
         return "redirect:/students";
     }
@@ -122,7 +122,7 @@ public class StudentController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/students/{id}/delete")
+    @PostMapping("/students/{id}/delete")
     public String delete(@PathVariable Long id) {
         this.service.delete(id);
         return "redirect:/students";

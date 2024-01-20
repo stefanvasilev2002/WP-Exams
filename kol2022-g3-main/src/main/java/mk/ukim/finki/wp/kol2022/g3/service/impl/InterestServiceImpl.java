@@ -7,7 +7,6 @@ import mk.ukim.finki.wp.kol2022.g3.service.InterestService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class InterestServiceImpl implements InterestService {
     private final InterestRepository interestRepository;

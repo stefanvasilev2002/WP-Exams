@@ -18,7 +18,6 @@ public class PlayersController {
 
     private final PlayerService playerService;
     private final TeamService teamService;
-
     public PlayersController(PlayerService playerService, TeamService teamService) {
         this.playerService = playerService;
         this.teamService = teamService;
@@ -40,13 +39,13 @@ public class PlayersController {
     public String showPlayers(@RequestParam(required = false) Double pointsPerGame,
                               @RequestParam(required = false) PlayerPosition position,
                               Model model) {
-        List<Player> players;
+        List<Player> playerList;
         if (pointsPerGame == null && position == null) {
-            players = this.playerService.listAllPlayers();
+            playerList = this.playerService.listAllPlayers();
         } else {
-            players = this.playerService.listPlayersWithPointsLessThanAndPosition(pointsPerGame, position);
+            playerList = this.playerService.listPlayersWithPointsLessThanAndPosition(pointsPerGame, position);
         }
-        model.addAttribute("players", players);
+        model.addAttribute("players", playerList);
         model.addAttribute("positions", PlayerPosition.values());
         return "list";
     }
@@ -57,9 +56,8 @@ public class PlayersController {
      *
      * @return The view "form.html".
      */
-    @GetMapping(value = "/players/add")
+    @GetMapping("/players/add")
     public String showAdd(Model model) {
-        model.addAttribute("player", new Player());
         model.addAttribute("positions", PlayerPosition.values());
         model.addAttribute("teams", teamService.listAll());
         return "form";
@@ -72,8 +70,9 @@ public class PlayersController {
      *
      * @return The view "form.html".
      */
-    @GetMapping(value = "/players/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
+    @GetMapping("/players/{id}/edit")
+    public String showEdit(@PathVariable Long id,
+                           Model model) {
         model.addAttribute("player", this.playerService.findById(id));
         model.addAttribute("positions", PlayerPosition.values());
         model.addAttribute("teams", teamService.listAll());
@@ -87,7 +86,7 @@ public class PlayersController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/players")
+    @PostMapping("/players")
     public String create(@RequestParam String name,
                          @RequestParam String bio,
                          @RequestParam Double pointsPerGame,
@@ -104,7 +103,7 @@ public class PlayersController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/players/{id}")
+    @PostMapping("/players/{id}")
     public String update(@PathVariable Long id,
                          @RequestParam String name,
                          @RequestParam String bio,
@@ -122,7 +121,7 @@ public class PlayersController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/players/{id}/delete")
+    @PostMapping("/players/{id}/delete")
     public String delete(@PathVariable Long id) {
         this.playerService.delete(id);
         return "redirect:/players";
@@ -135,7 +134,7 @@ public class PlayersController {
      *
      * @return The view "list.html".
      */
-    @PostMapping(value = "/players/{id}/vote")
+    @PostMapping("/players/{id}/vote")
     public String vote(@PathVariable Long id) {
         this.playerService.vote(id);
         return "redirect:/players";

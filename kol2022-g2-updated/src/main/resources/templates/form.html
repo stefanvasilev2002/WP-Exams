@@ -6,22 +6,20 @@
 <body>
 <!-- The form should submit to StudentController.create or StudentController.update,
      depending on whether we are creating or editing an entity -->
-<form method="POST" th:action="@{'/students/{id}' (id=${student?.getId()})}">
+<form th:method="post" th:action="@{ ${student!=null} ? '/students/' + ${student.getId()} : '/students'}">
     <div>
         <label for="f1">Name</label>
         <input type="text"
                id="f1"
                name="name"
-               th:text="${student?.getName()}"
                th:value="${student?.getName()}"
                required>
     </div>
     <div>
         <label for="f2">Email</label>
-        <input type="email"
+        <input type="text"
                id="f2"
                name="email"
-               th:text="${student?.getEmail()}"
                th:value="${student?.getEmail()}"
                required>
     </div>
@@ -38,25 +36,27 @@
         <input type="date"
                id="f6"
                name="enrollmentDate"
-               th:text="${student?.getEnrollmentDate()}"
+               th:value="${student?.getEnrollmentDate()}"
                required>
     </div>
     <div>
         <label>Type</label><br/>
         <select id="f4" name="type">
             <!-- For each type you should have one <option> like below  -->
-            <option th:each="type:${types}"
-                    th:text="${type}"
-                    th:value="${type}"> [type_name]</option>
+            <option th:each="type : ${types}"
+                    th:text="${type.toString()}"
+                    th:value="${type.toString()}"
+                    th:selected="${student?.getType()?.equals(type)}"> [type_name]</option>
         </select>
     </div>
     <div>
         <label>Courses</label><br/>
         <select id="f5" name="coursesId"  multiple>
             <!-- For each course you should have one <option> like below  -->
-            <option value="[course.id]" th:each="course:${courses}"
+            <option th:each="course : ${courses}"
                     th:text="${course.getName()}"
-                    th:selected="${student?.courses?.contains(course)}" th:value="${course.getId()}"> [course.name]</option>
+                    th:value="${course.getId()}"
+                    th:selected="${student?.getCourses()?.contains(course)}" value="[course.id]"> [course.name]</option>
         </select>
     </div>
 

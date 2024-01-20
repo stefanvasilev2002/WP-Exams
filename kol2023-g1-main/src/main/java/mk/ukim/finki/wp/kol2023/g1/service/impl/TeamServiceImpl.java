@@ -7,7 +7,6 @@ import mk.ukim.finki.wp.kol2023.g1.service.TeamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;

@@ -10,9 +10,13 @@ import java.util.List;
 
 @Repository
 public interface ForumUserRepository extends JpaRepository<ForumUser, Long> {
-    List<ForumUser> findByInterestsContaining(Interest interest);
-    List<ForumUser> findByBirthdayBefore(LocalDate date);
-    List<ForumUser> findByInterestsContainingAndBirthdayBefore(Interest interest, LocalDate date);
+
+
+    List<ForumUser> findAllByBirthdayBefore(LocalDate localDate);
+
+    List<ForumUser> findAllByInterestsContaining(Interest byId);
+
+    List<ForumUser> findAllByInterestsContainingAndBirthdayBefore(Interest byId, LocalDate localDate);
 
     ForumUser findByEmail(String username);
 }

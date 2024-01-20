@@ -14,17 +14,20 @@
         <select id="f2" name="interestId">
             <option value="">All</option>
             <!-- For each interest you should have one <option> like below  -->
-            <option th:each="interest:${interests}" th:value="${interest.getId()}" th:text="${interest.getName()}"> [interest]</option>
+            <option th:each="interest:${interests}"
+                    th:value="${interest.getId()}"
+                    th:text="${interest.getName()}"> [interest]</option>
         </select>
         <button id="filter" type="submit">Filter</button>
     </form>
     <div>
-        <!-- ForumUsersController.showAdd (Only ADMIN can see this element)-->
         <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <!-- ForumUsersController.showAdd (Only ADMIN can see this element)-->
             <a href="/users/add" class="add-item">
                 Add
             </a>
         </th:block>
+
     </div>
     <table>
         <tr>
@@ -35,23 +38,26 @@
             <th>Actions</th>
         </tr>
         <!-- For each user you should have one <tr> like below -->
-        <tr class="item" th:each="user:${users}">
+        <tr th:each="user:${users}"
+             class="item">
             <td th:text="${user.getName()}">[user.name]</td>
             <td th:text="${user.getEmail()}">[user.email]</td>
-            <td th:text="${user.getType()}">[user.type]</td>
+            <td th:text="${user.getType().toString()}">[user.type]</td>
             <td>
                 <!-- For each of the user.interests show the following element-->
-                <span class="item-rel" th:each="interest:${user.getInterests()}" th:text="${interest.getName()}"> [interest.name]</span>
+                <span th:each="interest:${user.getInterests()}"
+                      th:text="${interest.getName()}" class="item-rel"> [interest.name]</span>
             </td>
             <td>
-                <!-- ForumUsersController.delete (Only ADMIN can see this element)-->
                 <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-                <form method="post" th:action="@{'/users/{id}/delete' (id=${user.getId()})}">
-                    <button type="submit" class="delete-item">Delete</button>
-                </form>
-                <!-- ForumUsersController.showEdit (Only ADMIN can see this element)-->
-                <a class="edit-item" th:href="@{'/users/{id}/edit' (id=${user.getId()})}">Edit</a>
+                    <!-- ForumUsersController.delete (Only ADMIN can see this element)-->
+                    <form th:method="post" th:action="@{'/users/{id}/delete' (id=${user.getId()})}">
+                        <button type="submit" class="delete-item">Delete</button>
+                    </form>
+                    <!-- ForumUsersController.showEdit (Only ADMIN can see this element)-->
+                    <a th:method="post" th:href="@{'/users/{id}/edit' (id=${user.getId()})}" class="edit-item">Edit</a>
                 </th:block>
+
             </td>
         </tr>
     </table>

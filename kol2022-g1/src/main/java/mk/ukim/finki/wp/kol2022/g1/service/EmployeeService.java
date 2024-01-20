@@ -29,7 +29,7 @@ public interface EmployeeService {
      * This method is used to create a new entity, and save it in the database.
      *
      * @return The entity that is created. The id should be generated when the entity is created.
-     * @throws InvalidSkillIdException when there is no skill with the given id
+     * @throws InvalidSkillIdException when there is no category with the given id
      */
     Employee create(String name, String email, String password, EmployeeType type, List<Long> skillId, LocalDate employmentDate);
 

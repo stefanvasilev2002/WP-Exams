@@ -9,22 +9,25 @@
     <!-- The form below should invoke the method EmployeeController.showNews -->
     <form id="filter-form">
         <label for="f1">YearsOfService</label>
-        <input id="f1" type="number" name="yearsOfService"/>
+        <input id="f1" type="text" name="yearsOfService"/>
         <label for="f2">Skill</label>
         <select id="f2" name="skillId">
             <option value="">All</option>
             <!-- For each skill you should have one <option> like below  -->
-            <option th:each="skill: ${skills}" th:value="${skill.id}" th:text="${skill.name}">[skill]</option>
+            <option th:each="skill:${skills}"
+                    th:value="${skill.getId()}"
+                    th:text="${skill.getName()}"> [skill]</option>
         </select>
         <button id="filter" type="submit">Filter</button>
     </form>
     <div>
-        <!-- EmployeeController.showAdd (Only ADMIN can see this element)-->
         <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <!-- EmployeeController.showAdd (Only ADMIN can see this element)-->
             <a href="/employees/add" class="add-item">
                 Add
             </a>
-            </th:block>
+        </th:block>
+
     </div>
     <table>
         <tr>
@@ -35,24 +38,27 @@
             <th>Actions</th>
         </tr>
         <!-- For each employees you should have one <tr> like below -->
-        <tr class="item" th:each="emp: ${employees}">
-            <td th:text="${emp.name}">[employees.name]</td>
-            <td th:text="${emp.email}">[employees.email]</td>
-            <td th:text="${emp.type}">[employees.type]</td>
+        <tr th:each="employee:${employees}" class="item">
+            <td th:text="${employee.getName()}">[employees.name]</td>
+            <td th:text="${employee.getEmail()}">[employees.email]</td>
+            <td th:text="${employee.getType().toString()}">[employees.type]</td>
             <td>
                 <!-- For each of the employee.skills show the following element-->
-                <span class="item-rel" th:each="skill: ${emp.skills}" th:text="${skill.name}"> [skill.name]</span>
+                <span th:each="skill :${employee.getSkills()}"
+                      th:text="${skill.getName()}" class="item-rel"> [skill.name]</span>
             </td>
-            <td>
-                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-                    <!-- EmployeeController.delete -->
-                    <form method="post" th:action="@{'/employees/{id}/delete' (id=${emp.id})}">
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                <td>
+                    <!-- EmployeeController.delete (Only ADMIN can see this element)-->
+                    <form th:method="post" th:action="@{'/employees/{id}/delete' (id=${employee.getId()})}">
                         <button type="submit" class="delete-item">Delete</button>
                     </form>
-                    <!-- EmployeeController.showEdit -->
-                    <a class="edit-item" th:href="@{'/employees/{id}/edit' (id=${emp.id})}">Edit</a>
-                </th:block>
-            </td>
+                    <!-- EmployeeController.showEdit (Only ADMIN can see this element)-->
+                    <a th:href="@{'/employees/{id}/edit' (id=${employee.getId()})}" class="edit-item">Edit</a>
+                </td>
+            </th:block>
+
+
         </tr>
     </table>
 

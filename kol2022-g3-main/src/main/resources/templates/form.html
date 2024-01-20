@@ -6,7 +6,7 @@
 <body>
 <!-- The form should submit to ForumUsersController.create or ForumUsersController.update,
      depending on whether we are creating or editing an entity -->
-<form method="post" th:action="@{'/users/{id}' (id = ${user?.getId()})}">
+<form th:method="post" th:action="@{${user != null} ? '/users/' + ${user.getId()} : '/users'}">
     <div>
         <label for="f1">Name</label>
         <input type="text"
@@ -17,7 +17,7 @@
     </div>
     <div>
         <label for="f2">Email</label>
-        <input type="email"
+        <input type="text"
                id="f2"
                name="email"
                th:value="${user?.getEmail()}"
@@ -36,25 +36,25 @@
         <input type="date"
                id="f6"
                name="birthday"
-               th:value="${user?.birthday?.toString()}"
+               th:value="${user?.getBirthday()}"
                required>
     </div>
     <div>
         <label>Type</label><br/>
         <select id="f4" name="type">
             <!-- For each type you should have one <option> like below  -->
-            <option th:each="type: ${types}"
+            <option th:each="type : ${types}"
                     th:value="${type}"
+                    th:selected="${user?.getType()?.equals(type)}"> [type_name]</option>
+        </select>
     </div>
     <div>
         <label>Interests</label><br/>
         <select id="f5" multiple name="interestId">
             <!-- For each interest you should have one <option> like below  -->
-            <option value="[interest.id]"
-                    th:each="interest:${interests}"
+            <option th:each="interest : ${interests}"
                     th:value="${interest.getId()}"
-                    th:text="${interest.getName()}"
-                    th:selected="${user?.interests?.contains(interest)}"> [interest.name]</option>
+                    th:selected="${user?.getInterests()?.contains(interest)}" value="[interest.id]"> [interest.name]</option>
         </select>
     </div>
 

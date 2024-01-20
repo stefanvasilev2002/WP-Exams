@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    List<Employee> findBySkillsContainingAndEmploymentDateBefore(Skill skill, LocalDate year);
     List<Employee> findBySkillsContaining(Skill skill);
-    List<Employee> findByEmploymentDateBefore(LocalDate employmentBefore);
-    List<Employee> findByEmploymentDateBeforeAndSkillsContaining(LocalDate employmentBefore, Skill skill);
+    List<Employee> findByEmploymentDateBefore(LocalDate year);
     Employee findByEmail(String email);
 
 }

@@ -4,24 +4,27 @@ import mk.ukim.finki.wp.kol2022.g1.model.Employee;
 import mk.ukim.finki.wp.kol2022.g1.model.EmployeeType;
 import mk.ukim.finki.wp.kol2022.g1.model.Skill;
 import mk.ukim.finki.wp.kol2022.g1.model.exceptions.InvalidEmployeeIdException;
-import mk.ukim.finki.wp.kol2022.g1.model.exceptions.InvalidSkillIdException;
 import mk.ukim.finki.wp.kol2022.g1.repository.EmployeeRepository;
-import mk.ukim.finki.wp.kol2022.g1.repository.SkillRepository;
 import mk.ukim.finki.wp.kol2022.g1.service.EmployeeService;
+import mk.ukim.finki.wp.kol2022.g1.service.SkillService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService, UserDetailsService {
     private final EmployeeRepository employeeRepository;
-    private final SkillServiceImpl skillService;
+    private final SkillService skillService;
     private final PasswordEncoder passwordEncoder;
-
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, SkillServiceImpl skillService, PasswordEncoder passwordEncoder) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, SkillService skillService, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
         this.skillService = skillService;
         this.passwordEncoder = passwordEncoder;
@@ -42,30 +45,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(new Employee(
                 name,
                 email,
-                passwordEncoder.encode(password),
+                password,
                 type,
-                skillId.stream().map(this.skillService::findById).collect(Collectors.toList()),
+                skillId.stream().map(skillService::findById).collect(Collectors.toList()),
                 employmentDate
-                ));
+        ));
     }
 
     @Override
     public Employee update(Long id, String name, String email, String password, EmployeeType type, List<Long> skillId, LocalDate employmentDate) {
-        Employee emp = this.findById(id);
-        emp.setName(name);
-        emp.setEmail(email);
-        emp.setPassword(this.passwordEncoder.encode(password));
-        emp.setType(type);
-        emp.setSkills(skillId.stream().map(skillService::findById).collect(Collectors.toList()));
-        emp.setEmploymentDate(employmentDate);
-        return this.employeeRepository.save(emp);
+        Employee employee = findById(id);
+
+        employee.setName(name);
+        employee.setEmail(email);
+        employee.setPassword(password);
+        employee.setType(type);
+        employee.setSkills(skillId.stream().map(skillService::findById).collect(Collectors.toList()));
+        employee.setEmploymentDate(employmentDate);
+
+        return employeeRepository.save(employee);
     }
 
     @Override
     public Employee delete(Long id) {
-        Employee emp = findById(id);
-        this.employeeRepository.delete(emp);
-        return emp;
+        Employee employee = findById(id);
+        employeeRepository.delete(employee);
+        return employee;
     }
 
     @Override
@@ -84,7 +89,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         else {
             LocalDate employmentBefore = LocalDate.now().minusYears(yearsOfService);
             Skill skill = skillService.findById(skillId);
-            return employeeRepository.findByEmploymentDateBeforeAndSkillsContaining(employmentBefore, skill);
+            return employeeRepository.findBySkillsContainingAndEmploymentDateBefore(skill, employmentBefore);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Employee user =  employeeRepository.findByEmail(username);
+
+        return new User(user.getEmail(),
+                passwordEncoder.encode(user.getPassword()),
+                Collections.singleton(user.getType()));
     }
 }

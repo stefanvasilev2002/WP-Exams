@@ -39,7 +39,7 @@ public class SeleniumScenarioTest {
 
     static {
         SubmissionHelper.exam = "wp-kol-2022-g1";
-        SubmissionHelper.index = "TODO";
+        SubmissionHelper.index = "211021";
     }
 
     @Autowired
@@ -118,7 +118,7 @@ public class SeleniumScenarioTest {
             listPage = ItemsPage.to(this.driver);
         }
         listPage = AddOrEditForm.add(this.driver, listPage.getAddButton().isEmpty() ? null : listPage.getAddButton().get(0),
-                "f1", "f2", "f3", EmployeeType.CONSULTANT.name(), skills.get(0).getId().toString(), LocalDate.now().minusYears(5).toString());
+                "f1", "f2", "f3", EmployeeType.ROLE_CONSULTANT.name(), skills.get(0).getId().toString(), LocalDate.now().minusYears(5).toString());
         AbstractPage.assertRelativeUrl(this.driver, LIST_URL);
         listPage.assertNoError();
         listPage.assertItems(itemNum + 1, 2 * itemNum + 1);
@@ -140,7 +140,7 @@ public class SeleniumScenarioTest {
                 .param("name", "testName")
                 .param("email", "testDescription")
                 .param("password", "test")
-                .param("type", EmployeeType.CONSULTANT.name())
+                .param("type", EmployeeType.ROLE_CONSULTANT.name())
                 .param("skillId", categories.get(0).getId().toString())
                 .param("skillId", categories.get(1).getId().toString())
                 .param("employmentDate", LocalDate.now().minusYears(5).toString());
@@ -239,7 +239,7 @@ public class SeleniumScenarioTest {
         }
 
         listPage = AddOrEditForm.update(this.driver, listPage.getEditButtons().get(itemNum - 1),
-                "f1u", "f2u", "f3u", EmployeeType.CONSULTANT.name(), "1,2,3", LocalDate.now().minusYears(5).toString());
+                "f1u", "f2u", "f3u", EmployeeType.ROLE_CONSULTANT.name(), "1,2,3", LocalDate.now().minusYears(5).toString());
         listPage.assertNoError();
 
         AbstractPage.assertRelativeUrl(this.driver, LIST_URL);
@@ -265,7 +265,7 @@ public class SeleniumScenarioTest {
                 .param("name", "testName")
                 .param("email", "testDescription")
                 .param("password", "test")
-                .param("type", EmployeeType.CONSULTANT.name())
+                .param("type", EmployeeType.ROLE_CONSULTANT.name())
                 .param("skillId", categories.get(0).getId().toString())
                 .param("skillId", categories.get(1).getId().toString())
                 .param("skillId", categories.get(2).getId().toString())

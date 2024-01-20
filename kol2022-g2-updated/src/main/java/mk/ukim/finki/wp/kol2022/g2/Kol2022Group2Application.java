@@ -13,7 +13,7 @@ public class Kol2022Group2Application {
         SpringApplication.run(Kol2022Group2Application.class, args);
     }
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }

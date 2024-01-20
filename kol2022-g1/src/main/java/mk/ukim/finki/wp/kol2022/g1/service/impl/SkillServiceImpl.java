@@ -18,7 +18,7 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill findById(Long id) {
-        return this.skillRepository.findById(id).orElseThrow(InvalidSkillIdException::new);
+        return skillRepository.findById(id).orElseThrow(InvalidSkillIdException::new);
     }
 
     @Override

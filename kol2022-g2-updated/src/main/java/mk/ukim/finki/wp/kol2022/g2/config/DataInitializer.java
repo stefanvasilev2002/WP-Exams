@@ -1,18 +1,17 @@
 package mk.ukim.finki.wp.kol2022.g2.config;
 
 
+import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wp.kol2022.g2.model.Course;
 import mk.ukim.finki.wp.kol2022.g2.model.StudentType;
 import mk.ukim.finki.wp.kol2022.g2.service.StudentService;
 import mk.ukim.finki.wp.kol2022.g2.service.CourseService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 @Component
 public class DataInitializer {
 
@@ -26,9 +25,9 @@ public class DataInitializer {
     }
 
     private StudentType randomizeEventType(int i) {
-        if (i % 3 == 0) return StudentType.MASTER;
-        else if (i % 3 == 1) return StudentType.ADMIN;
-        return StudentType.UNDERGRADUATE;
+        if (i % 3 == 0) return StudentType.ROLE_MASTER;
+        else if (i % 3 == 1) return StudentType.ROLE_ADMIN;
+        return StudentType.ROLE_UNDERGRADUATE;
     }
     @PostConstruct
     public void initData() {

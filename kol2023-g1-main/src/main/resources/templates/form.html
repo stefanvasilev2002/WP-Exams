@@ -6,7 +6,7 @@
 <body>
 <!-- The form should submit to PlayersController.create or PlayersController.update,
      depending on whether we are creating or editing a player -->
-<form method="post" th:action="@{'/players/{id}' (id=${player?.getId()})}">
+<form th:method="post" th:action="@{ ${player != null} ? '/players/' + ${player.getId()} : '/players' }">
     <div>
         <label for="name">Name</label>
         <input type="text"
@@ -25,31 +25,31 @@
     </div>
     <div>
         <label for="pointsPerGame">Points Per Game</label>
-        <input type="number"
+        <input type="text"
                id="pointsPerGame"
                name="pointsPerGame"
-               th:value="${player?.getPointsPerGame()}"
+               th:value="${player?.getPointsPerGame()
+               }"
                required>
     </div>
     <div>
         <label>Player Position</label><br/>
         <select id="position" name="position" multiple="multiple" size="5">
             <!-- For each position you should have one <option> like below  -->
-            <option value="[position]"
-                    th:each="position:${positions}"
-                    th:value="${position}"
-                    th:text="${position}"
-                    th:selected="${position == player?.getPosition()}"> [position.name]</option>
+            <option th:each="pos:${positions}"
+                    th:value="${pos.toString()}"
+                    th:text="${pos.toString()}"
+                    th:selected="${player?.getPosition()?.equals(pos)}" value="[position]"> [position.name]</option>
         </select>
     </div>
     <div>
         <label>Team</label><br/>
         <select id="team" name="team" multiple="multiple" size="5">
             <!-- For each team you should have one <option> like below  -->
-            <option value="[team.id]"
-                    th:each="team:${teams}"
+            <option th:each="team:${teams}"
                     th:value="${team.getId()}"
-                    th:text="${team.getName()}"> [team.name]</option>
+                    th:text="${team.getName()}"
+                    th:selected="${player?.getTeam()?.getId()?.equals(team.getId())}" value="[team.id]"> [team.name]</option>
         </select>
     </div>
 

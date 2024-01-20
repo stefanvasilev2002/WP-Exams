@@ -4,7 +4,6 @@ import mk.ukim.finki.wp.kol2022.g1.model.Employee;
 import mk.ukim.finki.wp.kol2022.g1.model.EmployeeType;
 import mk.ukim.finki.wp.kol2022.g1.service.EmployeeService;
 import mk.ukim.finki.wp.kol2022.g1.service.SkillService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,16 +34,16 @@ public class EmployeeController {
      */
     @GetMapping(value = {"/", "/employees"})
     public String showList(@RequestParam(required = false) Long skillId,
-                           @RequestParam(required = false) Integer yearsOfService, Model model) {
+                           @RequestParam(required = false) Integer yearsOfService,
+                           Model model) {
         List<Employee> employees;
         if (skillId == null && yearsOfService == null) {
             employees = this.service.listAll();
         } else {
             employees = this.service.filter(skillId, yearsOfService);
         }
-
-        model.addAttribute("skills", skillService.listAll());
         model.addAttribute("employees", employees);
+        model.addAttribute("skills", skillService.listAll());
         return "list";
     }
 
@@ -56,7 +55,6 @@ public class EmployeeController {
      */
     @GetMapping("/employees/add")
     public String showAdd(Model model) {
-        model.addAttribute("emp", new Employee());
         model.addAttribute("skills", skillService.listAll());
         model.addAttribute("types", EmployeeType.values());
         return "form";
@@ -70,8 +68,9 @@ public class EmployeeController {
      * @return The view "form.html".
      */
     @GetMapping("/employees/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
-        model.addAttribute("emp", service.findById(id));
+    public String showEdit(@PathVariable Long id,
+                           Model model) {
+        model.addAttribute("employee", service.findById(id));
         model.addAttribute("skills", skillService.listAll());
         model.addAttribute("types", EmployeeType.values());
         return "form";
@@ -85,13 +84,12 @@ public class EmployeeController {
      * @return The view "list.html".
      */
     @PostMapping("/employees")
-    public String create(
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam EmployeeType type,
-            @RequestParam List<Long> skillId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate employmentDate) {
+    public String create(@RequestParam String name,
+                         @RequestParam String email,
+                         @RequestParam String password,
+                         @RequestParam EmployeeType type,
+                         @RequestParam List<Long> skillId,
+                         @RequestParam LocalDate employmentDate) {
         this.service.create(name, email, password, type, skillId, employmentDate);
         return "redirect:/employees";
     }
@@ -104,14 +102,13 @@ public class EmployeeController {
      * @return The view "list.html".
      */
     @PostMapping("/employees/{id}")
-    public String update(
-            @PathVariable Long id,
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam EmployeeType type,
-            @RequestParam List<Long> skillId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate employmentDate) {
+    public String update(@PathVariable Long id,
+                         @RequestParam String name,
+                         @RequestParam String email,
+                         @RequestParam String password,
+                         @RequestParam EmployeeType type,
+                         @RequestParam List<Long> skillId,
+                         @RequestParam LocalDate employmentDate) {
         this.service.update(id, name, email, password, type, skillId, employmentDate);
         return "redirect:/employees";
     }

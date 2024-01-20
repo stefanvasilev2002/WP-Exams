@@ -1,9 +1,9 @@
 package mk.ukim.finki.wp.kol2022.g2.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
-
 @Entity
 public class Student {
 
@@ -29,10 +29,8 @@ public class Student {
     private String email;
 
     private String password;
-
     @Enumerated(EnumType.STRING)
     private StudentType type;
-
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Course> courses;
 

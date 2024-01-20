@@ -1,11 +1,10 @@
 package mk.ukim.finki.wp.kol2023.g1.config;
 
+import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wp.kol2023.g1.model.PlayerPosition;
 import mk.ukim.finki.wp.kol2023.g1.service.TeamService;
 import mk.ukim.finki.wp.kol2023.g1.service.PlayerService;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class DataInitializer {
@@ -24,7 +23,6 @@ public class DataInitializer {
         else if(i % 3 == 1) return PlayerPosition.F;
         return PlayerPosition.C;
     }
-
     @PostConstruct
     public void initData() {
         for (int i = 1; i < 6; i++) {

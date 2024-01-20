@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.awt.image.BandCombineOp;
+
 @SpringBootApplication
 public class Kol2022Group1Application {
 
@@ -13,7 +15,7 @@ public class Kol2022Group1Application {
         SpringApplication.run(Kol2022Group1Application.class, args);
     }
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }

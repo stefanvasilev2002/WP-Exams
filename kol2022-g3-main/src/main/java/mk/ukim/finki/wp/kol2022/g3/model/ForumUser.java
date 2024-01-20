@@ -1,10 +1,11 @@
 package mk.ukim.finki.wp.kol2022.g3.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
-
-@Entity public class ForumUser {
+@Entity
+public class ForumUser {
 
     public ForumUser() {
     }
