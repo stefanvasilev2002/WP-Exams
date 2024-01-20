@@ -1,11 +1,11 @@
 package mk.ukim.finki.wp.kol2023.g2.config;
 
+import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wp.kol2023.g2.model.Genre;
 import mk.ukim.finki.wp.kol2023.g2.service.DirectorService;
 import mk.ukim.finki.wp.kol2023.g2.service.MovieService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 @Component
 public class DataInitializer {

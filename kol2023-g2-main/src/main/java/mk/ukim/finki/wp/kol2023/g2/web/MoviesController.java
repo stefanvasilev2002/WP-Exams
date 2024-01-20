@@ -39,7 +39,7 @@ public class MoviesController {
     public String showMovies(@RequestParam(required = false) Double rating,
                              @RequestParam(required = false) Genre genre,
                              Model model) {
-        List<Movie> movies = null;
+        List<Movie> movies;
         if (rating == null && genre == null) {
             movies = this.movieService.listAllMovies();
         } else {
@@ -58,7 +58,6 @@ public class MoviesController {
      */
     @GetMapping(value = "/movies/add")
     public String showAdd(Model model) {
-        model.addAttribute("movie", new Movie());
         model.addAttribute("genres", Genre.values());
         model.addAttribute("directors", directorService.listAll());
         return "form";

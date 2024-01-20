@@ -9,12 +9,15 @@
     <!-- The form below should invoke the method MoviesController.showMovies -->
     <form id="filter-form">
         <label for="rating">Rating</label>
-        <input id="rating" type="number" name="rating"/>
+        <input id="rating" type="text" name="rating"/>
         <label for="genre">Genre</label>
         <select id="genre" name="genre">
             <option value="">All</option>
             <!-- For each genre you should have one <option> like below  -->
-            <option value="[genre]" th:each="genre:${genres}" th:value="${genre}" th:text="${genre}"> [genre.name]</option>
+            <option value="[genre]"
+                    th:each="genre:${genres}"
+                    th:value="${genre}"
+                    th:text="${genre}"> [genre.name]</option>
         </select>
         <button id="filter" type="submit">Filter</button>
     </form>
@@ -46,20 +49,18 @@
             <td th:text="${movie.getDirector().getName()}">[movie.director]</td>
             <td th:text="${movie.getVotes()}">[movie.votes]</td>
             <td>
-                <!-- MoviesController.delete -->
+
                 <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <!-- MoviesController.delete -->
                     <form th:method="post" th:action="@{'/movies/{id}/delete' (id=${movie.getId()})}">
                         <button type="submit" class="delete-item">Delete</button>
                     </form>
-                </th:block>
-
-                <!-- MoviesController.showEdit -->
-                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <!-- MoviesController.showEdit -->
                     <a th:method="post" th:href="@{'/movies/{id}/edit' (id=${movie.getId()})}" class="edit-item">Edit</a>
-
                 </th:block>
-                <!-- MoviesController.vote -->
+
                 <th:block sec:authorize="hasRole('ROLE_USER')">
+                    <!-- MoviesController.vote -->
                     <form th:method="post" th:action="@{'/movies/{id}/vote' (id=${movie.getId()})}">
                         <button type="submit" class="like-item">Vote for Movie</button>
                     </form>

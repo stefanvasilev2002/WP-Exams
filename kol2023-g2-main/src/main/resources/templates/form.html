@@ -6,7 +6,7 @@
 <body>
 <!-- The form should submit to MoviesController.create or MoviesController.update,
      depending on whether we are creating or editing a movie -->
-<form method="post" th:action="@{'/movies/{id}' (id=${movie?.getId()})}">
+<form method="post" th:action="@{ ${movie != null} ? '/movies/' + ${movie.getId()} : '/movies'}">
     <div>
         <label for="name">Name</label>
         <input type="text"
@@ -25,7 +25,7 @@
     </div>
     <div>
         <label for="rating">Rating</label>
-        <input type="number"
+        <input type="text"
                id="rating"
                name="rating"
                th:value="${movie?.getRating()}"
@@ -35,7 +35,11 @@
         <label>Genre</label><br/>
         <select id="genre" name="genre" multiple="multiple" size="5">
             <!-- For each genre you should have one <option> like below  -->
-            <option value="[genre]" th:each="genre:${genres}" th:value="${genre}" th:text="${genre}"> [genre.name]</option>
+            <option value="[genre]"
+                    th:each="genre:${genres}"
+                    th:value="${genre}"
+                    th:text="${genre}"
+                    th:selected="${movie?.getGenre()?.equals(genre)}"> [genre.name]</option>
         </select>
     </div>
     <div>
@@ -45,7 +49,8 @@
             <option value="[director.id]"
                     th:each="director:${directors}"
                     th:value="${director.getId()}"
-                    th:text="${director.getName()}"> [director.name]</option>
+                    th:text="${director.getName()}"
+                    th:selected="${movie?.getDirector()?.getId()?.equals(director.getId())}"> [director.name]</option>
         </select>
     </div>
 

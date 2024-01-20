@@ -2,8 +2,7 @@ package mk.ukim.finki.wp.kol2023.g2.model;
 
 import lombok.Getter;
 
-import javax.persistence.*;
-
+import jakarta.persistence.*;
 @Getter
 @Entity
 public class Movie {
@@ -30,7 +29,7 @@ public class Movie {
     private Double rating;
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Director director;
 
     private Integer votes = 0;

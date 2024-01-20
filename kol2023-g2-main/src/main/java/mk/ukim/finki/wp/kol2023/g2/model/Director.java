@@ -2,9 +2,7 @@ package mk.ukim.finki.wp.kol2023.g2.model;
 
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.*;
 
 @Getter
 @Entity

@@ -13,7 +13,7 @@ public class ExampleApplication {
         SpringApplication.run(ExampleApplication.class, args);
     }
     @Bean
-    public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
