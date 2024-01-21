@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to CandidatesController.create or CandidatesController.update,
+     depending on whether we are creating or editing a candidate -->
+<form th:method="post" th:action="@{ ${candidate != null} ? '/candidates/' + ${candidate.getId()} : '/candidates'}">
+    <div>
+        <label for="name">Name</label>
+        <input type="text"
+               id="name"
+               name="name"
+               th:value="${candidate?.getName()}"
+               required>
+    </div>
+    <div>
+        <label for="bio">Biography</label>
+        <input type="text"
+               id="bio"
+               name="bio"
+               th:value="${candidate?.getBio()}"
+               required>
+    </div>
+    <div>
+        <label for="dateOfBirth">Date of Birth</label>
+        <input type="date"
+               id="dateOfBirth"
+               name="dateOfBirth"
+               th:value="${candidate?.getDateOfBirth()}"
+               required>
+    </div>
+    <div>
+        <label for="gender">Gender</label><br/>
+        <select id="gender" name="gender" multiple="multiple" size="5">
+            <!-- For each gender you should have one <option> like below  -->
+            <option th:each="gender:${genders}"
+                    th:value="${gender}"
+                    th:text="${gender}"
+                    th:selected="${candidate?.getGender()?.equals(gender)}" value="[gender]"> [gender.name]</option>
+        </select>
+    </div>
+    <div>
+        <label>Party</label><br/>
+        <select id="party" name="party" multiple="multiple" size="5">
+            <!-- For each party you should have one <option> like below  -->
+            <option th:each="party:${parties}"
+                    th:value="${party.getId()}"
+                    th:text="${party.getId()}"
+                    value="[party.id]"> [party.name]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/candidates" type="button" class="btn btn-primary">Back to candidates</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

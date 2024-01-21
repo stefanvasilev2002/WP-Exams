@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method CandidatesController.showCandidates -->
+    <form id="filter-form">
+        <label for="years">Years</label>
+        <input id="years" type="number" name="years"/>
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender">
+            <option value="">All</option>
+            <!-- For each gender you should have one <option> like below  -->
+            <option th:each="gender:${genders}" th:value="${gender}" th:text="${gender}" value="[gender]"> [gender.name]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- CandidatesController.showAdd -->
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+
+        <a href="/candidates/add" class="add-item">
+            Add new candidate
+        </a>
+        </th:block>
+    </div>
+    <table>
+        <tr>
+            <th>Candidate name</th>
+            <th>Biography</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Party</th>
+            <th>Votes</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each candidate you should have one <tr> like below -->
+        <tr th:each="can:${candidates}" class="item">
+            <td th:text="${can.getName()}">[candidate.name]</td>
+            <td th:text="${can.getBio()}">[candidate.bio]</td>
+            <td th:text="${can.getDateOfBirth()}">[candidate.dateOfBirth]</td>
+            <td th:text="${can.getGender()}">[candidate.gender]</td>
+            <td th:text="${can.getParty().getName()}">[candidate.party]</td>
+            <td th:text="${can.getVotes()}">[candidate.votes]</td>
+            <td>
+                <!-- CandidatesController.delete -->
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <form th:method="post" th:action="@{'/candidates/{id}/delete' (id=${can.getId()})}">
+                        <button type="submit" class="delete-item">Delete</button>
+                    </form>
+                    <!-- CandidatesController.showEdit -->
+                    <a th:href="@{'/candidates/{id}/edit' (id=${can.getId()})}" class="edit-item">Edit</a>
+                </th:block>
+
+                <th:block sec:authorize="hasRole('ROLE_USER')">
+
+                <!-- CandidatesController.vote -->
+                <form th:method="post" th:action="@{'/candidates/{id}/vote' (id=${can.getId()})}">
+                    <button type="submit" class="like-item">Vote</button>
+                </form>
+                </th:block>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>
