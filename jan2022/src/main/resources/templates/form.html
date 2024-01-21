@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to TaskController.create or TaskController.update,
+     depending on whether we are creating or editing an entity -->
+<form th:method="post" th:action="@{${task != null} ? '/tasks/' + ${task.getId()} : '/tasks'}">
+    <div>
+        <label for="f1">Title</label>
+        <input type="text"
+               id="f1"
+               name="title"
+               th:value="${task?.getTitle()}"
+               required>
+    </div>
+    <div>
+        <label for="f2">Description</label>
+        <input type="text"
+               id="f2"
+               name="description"
+               th:value="${task?.getDescription()}"
+               required>
+    </div>
+    <div>
+        <label for="f6">Due Date</label>
+        <input type="text"
+               id="f6"
+               name="dueDate"
+               th:value="${task?.getDueDate()}"
+               required>
+    </div>
+    <div>
+        <label>Category</label><br/>
+        <select id="f4" name="category">
+            <!-- For each category you should have one <option> like below  -->
+            <option th:each="cat:${categories}"
+                    th:value="${cat.toString()}"
+                    th:text="${cat.toString()}"
+                    th:selected="${task?.getCategory()?.equals(cat)}"> [category_name]</option>
+        </select>
+    </div>
+    <div>
+        <label>Assignees</label><br/>
+        <select id="f5" name="assignees" multiple>
+            <!-- For each skill you should have one <option> like below  -->
+            <option th:each="user:${users}"
+                    th:value="${user.getId()}"
+                    th:text="${user.getUsername()}"
+                    th:selected="${task?.getAssignees()?.contains(user)}"> [assignee.username]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/tasks" type="button" class="btn btn-primary">Back to tasks</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <input type="hidden" id="f3" value="f3" required>
+    </ul>
+</div>
+
+</body>
+</html>

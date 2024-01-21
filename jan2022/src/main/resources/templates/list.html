@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method TaskController.showNews -->
+    <form id="filter-form">
+        <label for="f1">Due in days: </label>
+        <input id="f1" type="text" name="lessThanDayBeforeDueDate"/>
+        <label for="f2">Assignee</label>
+        <select id="f2" name="assigneeId">
+            <option value="">All</option>
+            <!-- For each user you should have one <option> like below  -->
+            <option th:each="user:${users}"
+                    th:value="${user.getId()}"
+                    th:text="${user.getUsername()}"> [user.username]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <th:block sec:authorize="hasRole('ROLE_MANAGER')">
+            <!-- TaskController.showAdd (Only ADMIN can see this element)-->
+            <a href="/tasks/add" class="add-item">
+                Add
+            </a>
+        </th:block>
+
+    </div>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Assignees</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each tasks you should have one <tr> like below -->
+        <tr th:each="task:${tasks}" class="item">
+            <td th:text="${task.getTitle()}">[tasks.title]</td>
+            <td th:text="${task.getDescription()}">[tasks.description]</td>
+            <td th:text="${task.getCategory().toString()}">[tasks.category]</td>
+            <td>
+                <!-- For each of the task.assignees show the following element-->
+                <span th:each="assignee : ${task.getAssignees()}"
+                      th:text="${assignee.getUsername()}" class="item-rel"> [assignee.username]</span>
+            </td>
+            <td>
+                <th:block sec:authorize="hasRole('ROLE_MANAGER')">
+                    <!-- TaskController.delete (Only MANAGER can see this element)-->
+                    <form th:method="post" th:action="@{'/tasks/{id}/delete' (id=${task.getId()})}">
+                        <button type="submit" class="delete-item">Delete</button>
+                    </form>
+                    <!-- TaskController.showEdit (Only MANAGER can see this element)-->
+                    <a th:href="@{'/tasks/{id}/edit' (id=${task.getId()})}" class="edit-item">Edit</a>
+                </th:block>
+
+
+                <!-- TaskController.markDone (Visible only when the task is not done)-->
+
+                <form th:method="post"
+                      th:action="@{'/tasks/{id}/mark_done' (id=${task.getId()})}"
+                      th:if="${!task.getDone()}">
+                    <button class="change-item">Mark as done</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>
