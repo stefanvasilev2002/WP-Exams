@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method MatchesController.showMatches -->
+    <form id="filter-form">
+        <label for="price">Price</label>
+        <input id="price" type="text" name="price"/>
+        <label for="type">Type</label>
+        <select id="type" name="type">
+            <option value="">All</option>
+            <!-- For each type you should have one <option> like below  -->
+            <option th:each="type:${types}"
+                    th:value="${type}"
+                    th:text="${type}" value="[type]"> [type.name]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- MatchesController.showAdd -->
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/matches/add" class="add-item">
+                Add new match
+            </a>
+        </th:block>
+
+    </div>
+    <table>
+        <tr>
+            <th>Match name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Follows</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each match you should have one <tr> like below -->
+        <tr class="item" th:each="match:${matches}">
+            <td th:text="${match.getName()}">[match.name]</td>
+            <td th:text="${match.getDescription()}">[match.description]</td>
+            <td th:text="${match.getPrice()}">[match.price]</td>
+            <td th:text="${match.getType()}">[match.type]</td>
+            <td th:text="${match.getLocation().getName()}">[match.location]</td>
+            <td th:text="${match.getFollows()}">[match.follows]</td>
+            <td>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <!-- MatchesController.delete -->
+                    <form th:method="post" th:action="@{'/matches/{id}/delete' (id=${match.getId()})}">
+                        <button type="submit" class="delete-item">Delete</button>
+                    </form>
+
+                    <!-- MatchesController.showEdit -->
+                    <a th:href="@{'/matches/{id}/edit' (id=${match.getId()})}" class="edit-item">Edit</a>
+                </th:block>
+
+                <th:block sec:authorize="hasRole('ROLE_USER')">
+                    <!-- MatchesController.follow -->
+                    <form th:method="post" th:action="@{'/matches/{id}/follow' (id=${match.getId()})}">
+                        <button type="submit" class="follow-item">Follow match</button>
+                    </form>
+                </th:block>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>
