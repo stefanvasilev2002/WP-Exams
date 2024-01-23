@@ -43,6 +43,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests( (requests) -> requests
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/"))
                         .permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/tasks/{id}/mark_done"))
+                        .hasRole("DEVELOPER")
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/tasks/{id}/**"))
+                        .hasRole("MANAGER")
                         .anyRequest()
                         .authenticated()
                 )
